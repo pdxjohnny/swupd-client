@@ -3,7 +3,17 @@ EXTRA_DIST = COPYING scripts/findstatic.pl swupd.bash
 AM_CFLAGS = -fPIC -Iinclude/ -O2 -g -Wall -W -Wformat-security -D_FORTIFY_SOURCE=2 -fno-common -std=gnu99
 ACLOCAL_AMFLAGS = -I m4
 
-bin_PROGRAMS = swupd
+bin_PROGRAMS = swupd load_mom
+
+load_mom_SOURCES = \
+	src/load_mom.c \
+	$(swupd_hashdump_SOURCES) \
+	$(swupd_update_SOURCES) \
+	$(swupd_check_update_SOURCES) \
+	$(swupd_verify_SOURCES) \
+	$(clr_bundle_add_SOURCES) \
+	$(clr_bundle_rm_SOURCES) \
+	$(swupd_search_SOURCES)
 
 swupd_SOURCES = \
 	src/swupd.c \
@@ -80,6 +90,7 @@ SWUPD_COMPRESSION_LIBS = $(lzma_LIBS) $(zlib_LIBS) $(bzip2_LIBS)
 SWUPD_CORE_LIBS = libswupd.la ${curl_LIBS} $(openssl_LIBS) $(SWUPD_COMPRESSION_LIBS) $(bsdiff_LIBS)
 
 swupd_LDADD = $(SWUPD_CORE_LIBS) $(pthread_LIBS)
+load_mom_LDADD = $(SWUPD_CORE_LIBS) $(pthread_LIBS)
 
 swupd_bsdiff_bench_LDADD = $(SWUPD_CORE_LIBS)
 swupd_hashtest_LDADD = $(SWUPD_CORE_LIBS) $(pthread_LIBS)

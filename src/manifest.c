@@ -162,7 +162,7 @@ static struct manifest *alloc_manifest(int version, char *component)
 	return manifest;
 }
 
-static struct manifest *manifest_from_file(int version, char *component)
+struct manifest *manifest_from_file(int version, char *component)
 {
 	FILE *infile;
 	char line[MANIFEST_LINE_MAXLEN], *c, *c2;
@@ -175,7 +175,11 @@ static struct manifest *manifest_from_file(int version, char *component)
 	int manifest_hdr_version;
 	int manifest_enc_version;
 
-	string_or_die(&filename, "%s/%i/Manifest.%s", state_dir, version, component);
+    char *path = getenv("MANIFEST");
+    if (path == NULL) {
+        exit(42);
+    }
+	string_or_die(&filename, "%s", path);
 
 	infile = fopen(filename, "rb");
 	if (infile == NULL) {
